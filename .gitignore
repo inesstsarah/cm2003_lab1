@@ -3,3 +3,4 @@ cm2003/datasets/*.tar.gz
 cm2003/datasets/*.npz
 __pycache__/
 .ipynb_checkpoints/
+decision boundaries/
