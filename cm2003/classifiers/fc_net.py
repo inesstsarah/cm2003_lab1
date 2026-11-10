@@ -2,6 +2,8 @@ from builtins import range
 from builtins import object
 import numpy as np
 
+from cm2003.classifiers import softmax
+
 from ..layers import *
 from ..layer_utils import *
 
@@ -54,8 +56,16 @@ class TwoLayerNet(object):
         # weights and biases using the keys 'W2' and 'b2'.                         #
         ############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+        
+        # size of W1 is (input_dim, hidden_dim) because size of the input features is input_dim and 
+        # the number of hidden neurons is hidden_dim
+        self.params["W1"] = np.random.normal(loc = 0.0, scale = weight_scale, size = (input_dim, hidden_dim))
+        self.params["b1"] = np.zeros(hidden_dim)
+        # W2 and b2 have opposite dimensions of W1 and b1 because 
+        # W1 maps input features to hidden neurons, while W2 maps hidden neurons to output classes
+        self.params["W2"] = np.random.normal(loc = 0.0, scale = weight_scale, size = (hidden_dim, num_classes))
+        self.params["b2"] = np.zeros(num_classes)
 
-        pass
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         ############################################################################
@@ -88,7 +98,9 @@ class TwoLayerNet(object):
         ############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        pass
+        forward_pass_layer1 = X @ self.params["W1"] + self.params["b1"]
+        forward_pass_layer2 = forward_pass_layer1 @ self.params["W2"] + self.params["b2"]
+        scores = forward_pass_layer2
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         ############################################################################
@@ -111,8 +123,8 @@ class TwoLayerNet(object):
         # of 0.5 to simplify the expression for the gradient.                      #
         ############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
-        pass
+        loss = softmax()
+        
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         ############################################################################

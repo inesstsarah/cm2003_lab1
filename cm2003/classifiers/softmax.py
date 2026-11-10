@@ -2,7 +2,6 @@ from builtins import range
 import numpy as np
 from random import shuffle
 
-
 def softmax_loss_naive(W, X, y, reg):
     """
     Softmax loss function, naive implementation (with loops)
@@ -32,8 +31,19 @@ def softmax_loss_naive(W, X, y, reg):
     # regularization!                                                           #
     #############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+    for i in range(X.shape[0]):
+        scores = np.dot(X[i],W)
+        # normalize score vector 
+        scores = scores - np.max(scores)
+        # regularize (Not sure yet if this is right)
+        scores = scores - reg
+        exp_scores = np.exp(scores) # getting element wise exponential values
+        exp_values_sum = np.sum(exp_scores)
+        probs = exp_scores / exp_values_sum
+        loss = loss-np.log(probs[y[i]])
 
-    pass
+
+    
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
