@@ -31,16 +31,27 @@ def softmax_loss_naive(W, X, y, reg):
     # regularization!                                                           #
     #############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+    cross_entropy_loss = []
     for i in range(X.shape[0]):
+        for j in range(W.shape[1]):
+            dW[:,j] += (np.exp(np.dot(X[i],W[:,j]))/np.sum(np.exp(np.dot(X[i],W))))*X[i] - reg*X[i]
+            if j == y[i]:
+                dW[:,j] -= X[i] - reg*X[i] 
+        
         scores = np.dot(X[i],W)
         # normalize score vector 
-        scores = scores - np.max(scores)
+        #scores = scores - np.max(scores)
         # regularize (Not sure yet if this is right)
         scores = scores - reg
         exp_scores = np.exp(scores) # getting element wise exponential values
         exp_values_sum = np.sum(exp_scores)
         probs = exp_scores / exp_values_sum
-        loss = loss-np.log(probs[y[i]])
+        cross_entropy_loss.append(- np.log(probs[y[i]]))
+
+    # compute loss
+    loss = np.sum(cross_entropy_loss)/X.shape[0]        
+
+        
 
 
     
@@ -68,7 +79,34 @@ def softmax_loss_vectorized(W, X, y, reg):
     #############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    #num_classes = W.shape[1]
+    num_train = X.shape[0]
+
+    # Scores
+    scores = X.dot(W)
+
+    # Numerical stability
+    scores -= np.max(scores, axis=1, keepdims=True)
+
+    exp_scores = np.exp(scores)
+
+    # Softmax probabilities
+    probs = exp_scores / np.sum(exp_scores, axis=1, keepdims=True)
+
+    # Loss
+    correct_class_probs = probs[np.arange(num_train), y]
+
+    loss = -np.sum(np.log(correct_class_probs)) / num_train
+    loss += 0.5 * reg * np.sum(W * W)
+
+    # Gradient
+    probs[np.arange(num_train), y] -= 1
+
+    dW = X.T.dot(probs) / num_train
+    dW += reg * W
+
+
+
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
